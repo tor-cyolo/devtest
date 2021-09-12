@@ -1,0 +1,2545 @@
+swagger: "2.0"
+info:
+  description: "Cyolo IDAC API"
+  version: "1.0"
+  title: "Cyolo IDAC API V1"
+  contact:
+    email: "support@cyolo.io"
+schemes:
+  - https
+produces:
+  - application/json
+consumes:
+  - application/json
+tags:
+  - name: "Branding"
+    description: "Branding API"
+  - name: "Cluster"
+    description: "Cluster API"
+  - name: "Certificates"
+    description: "Certificates API"
+  - name: "Users"
+    description: "Users API"
+  - name: "Groups"
+    description: "Groups API"
+  - name: "Mappings"
+    description: "Mappings API"
+  - name: "Policies"
+    description: "Policies API"
+  - name: "Integrations"
+    description: "Integrations API"
+  - name: "Logs"
+    description: "Logs API"
+  - name: "Login"
+    description: "Login API"
+  - name: "Identity Providers"
+    description: "Identity Provider API"
+  - name: "Licensing"
+    description: "Licensing API"
+  - name: "Enrollment"
+    description: "Enrollment API"
+  - name: "Vault"
+    description: "Vault API"
+  - name: "Configuration"
+    description: "Configuration API"
+  - name: "Constraints"
+    description: "Policy Constraint API"
+  - name: "Capabilities"
+    description: "Protocol Capability API"
+
+responses:
+  Success:
+    description: "success"
+  BadRequest:
+    description: "bad request"
+  Unauthorized:
+    description: "unauthorized"
+    headers:
+      Location:
+        type: string
+        description: "where to go next"
+
+parameters:
+  IdOrName:
+    name: "idOrName"
+    in: path
+    required: true
+    type: string
+    description: "object id or name"
+
+paths:
+  /v1/company/info:
+    get:
+      tags:
+        - "Branding"
+      summary: "gets company information for user interface branding"
+      responses:
+        '200':
+          description: "an object with information needed to customize the user interface"
+          schema:
+            $ref: "#/definitions/BrandingInformation"
+    post:
+      tags:
+        - "Branding"
+      summary: "updates company information for user interface branding"
+      parameters:
+        - in: body
+          name: "body"
+          description: "information about the company"
+          schema:
+            $ref: "#/definitions/BrandingInformation"
+      responses:
+        '200':
+          description: "success"
+          schema:
+            $ref: "#/definitions/BrandingInformation"
+
+    put:
+      tags:
+        - "Branding"
+      summary: "creates company information for user interface branding"
+      parameters:
+        - in: body
+          name: "body"
+          description: "information about the company"
+          schema:
+            $ref: "#/definitions/BrandingInformation"
+      responses:
+        '200':
+          description: "success"
+          schema:
+            $ref: "#/definitions/BrandingInformation"
+
+  /v1/company/logo:
+    get:
+      tags:
+        - "Branding"
+      summary: "gets company logo for user interface branding"
+      responses:
+        '200':
+          description: "an image file for customizing the ui"
+          schema:
+            type: string
+            format: binary
+
+    delete:
+      tags:
+        - "Branding"
+      summary: "reset company logo to default"
+      responses:
+        '200':
+          $ref: "#/responses/Success"
+
+  /v1/company/servers_watermark:
+    get:
+      tags:
+        - "Branding"
+      summary: "gets the company servers watermark"
+      responses:
+        '200':
+          description: "an image file for customizing the ui"
+          schema:
+            type: string
+            format: binary
+    delete:
+      tags:
+        - "Branding"
+      summary: "reset the company servers watermark"
+      responses:
+        '200':
+    put:
+      tags:
+        - "Branding"
+      summary: "create new company servers watermark"
+      responses:
+        '200':
+          schema:
+            type: string
+            format: binary
+
+  /v1/company/admin_console_logo:
+    get:
+      tags:
+        - "Branding"
+      summary: "gets the company logo for admin console"
+      responses:
+        '200':
+          description: "an image file for customizing the ui"
+          schema:
+            type: string
+            format: binary
+    delete:
+      tags:
+        - "Branding"
+      summary: "reset the company logo for admin console"
+      responses:
+        '200':
+    put:
+      tags:
+        - "Branding"
+      summary: "create new company logo for admin console"
+      responses:
+        '200':
+          schema:
+            type: string
+            format: binary
+
+
+  /v1/processes:
+    get:
+      tags:
+        - "Cluster"
+      summary: "gets information regarding idac cluster members"
+      responses:
+        '200':
+          description: "information about regarding cluster members"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/ProcessInformation"
+
+  /v1/processes/me:
+    put:
+      tags:
+        - "Cluster"
+      summary: "initiate cluster-wide software update"
+      responses:
+        '200':
+          $ref: "#/responses/Success"
+
+  /v1/certificates:
+    get:
+      tags:
+        - "Certificates"
+      summary: "get all certificates"
+      responses:
+        '200':
+          description: "all certificates"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/CertificateResponse"
+    put:
+      tags:
+        - "Certificates"
+      summary: "create a new certificate"
+      parameters:
+        - in: body
+          name: "body"
+          description: "a certificate"
+          schema:
+            $ref: "#/definitions/CertificateRequest"
+      responses:
+        '200':
+          description: "the created certificate"
+          schema:
+            $ref: "#/definitions/CertificateResponse"
+
+  /v1/certificates/{idOrName}:
+    parameters:
+      - $ref: "#/parameters/IdOrName"
+    get:
+      tags:
+        - "Certificates"
+      summary: "retrieve a certificate by id or name"
+      responses:
+        '200':
+          description: "certificate payload"
+          schema:
+            $ref: "#/definitions/CertificateResponse"
+    post:
+      tags:
+        - "Certificates"
+      summary: "update a certificate by id or name"
+      parameters:
+        - in: body
+          name: "body"
+          description: "certificate payload"
+          schema:
+            $ref: "#/definitions/CertificateRequest"
+      responses:
+        '200':
+          description: "modified certificate object"
+          schema:
+            $ref: "#/definitions/CertificateResponse"
+    delete:
+      tags:
+        - "Certificates"
+      summary: "delete a certificate by id or name"
+      responses:
+        '200':
+          $ref: "#/responses/Success"
+
+  /v1/users:
+    get:
+      tags:
+        - "Users"
+      summary: "get all users"
+      responses:
+        '200':
+          description: "all users"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/UserResponse"
+    put:
+      tags:
+        - "Users"
+      summary: "create a user"
+      parameters:
+        - in: body
+          name: "body"
+          schema:
+            $ref: "#/definitions/UserRequest"
+      responses:
+        '200':
+          description: "the newly created user"
+          schema:
+            $ref: "#/definitions/UserRequest"
+
+  /v1/users/{idOrName}:
+    parameters:
+      - $ref: "#/parameters/IdOrName"
+    get:
+      tags:
+        - "Users"
+      summary: "get a user by id or name"
+      responses:
+        '200':
+          description: "user with id or name"
+          schema:
+            $ref: "#/definitions/UserResponse"
+    post:
+      tags:
+        - "Users"
+      summary: "update a user by id or name"
+      parameters:
+        - in: body
+          name: "body"
+          schema:
+            $ref: "#/definitions/UserRequest"
+      responses:
+        '200':
+          description: "modified user object"
+          schema:
+            $ref: "#/definitions/UserResponse"
+    delete:
+      tags:
+        - "Users"
+      summary: "delete a user by id or name"
+      responses:
+        '200':
+          $ref: "#/responses/Success"
+
+  /v1/simple_groups:
+    get:
+      tags:
+        - "Groups"
+      summary: "get all simple groups"
+      responses:
+        '200':
+          description: "all simple groups"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/SimpleGroupResponse"
+    put:
+      tags:
+        - "Groups"
+      summary: "create a simple group"
+      parameters:
+        - in: body
+          name: "body"
+          schema:
+            $ref: "#/definitions/SimpleGroupRequest"
+      responses:
+        '200':
+          description: "the newly created simple group"
+          schema:
+            $ref: "#/definitions/SimpleGroupResponse"
+
+  /v1/simple_groups/{idOrName}:
+    parameters:
+      - $ref: "#/parameters/IdOrName"
+    post:
+      tags:
+        - "Groups"
+      summary: "update a simple group by id or name"
+      parameters:
+        - in: body
+          name: "body"
+          schema:
+            $ref: "#/definitions/SimpleGroupRequest"
+      responses:
+        '200':
+          description: "modified simple group object"
+          schema:
+            $ref: "#/definitions/SimpleGroupResponse"
+    delete:
+      tags:
+        - "Groups"
+      summary: "delete a simple group by id or name"
+      responses:
+        '200':
+          $ref: "#/responses/Success"
+
+  /v1/dynamic_groups:
+    get:
+      tags:
+        - "Groups"
+      summary: "get all dynamic groups"
+      responses:
+        '200':
+          description: "all dynamic groups"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/DynamicGroupResponse"
+    put:
+      tags:
+        - "Groups"
+      summary: "create a dynamic group"
+      parameters:
+        - in: body
+          name: "body"
+          schema:
+            $ref: "#/definitions/DynamicGroupRequest"
+      responses:
+        '200':
+          description: "the newly created simple group"
+          schema:
+            $ref: "#/definitions/DynamicGroupResponse"
+
+  /v1/dynamic_groups/{idOrName}:
+    parameters:
+      - $ref: "#/parameters/IdOrName"
+    post:
+      tags:
+        - "Groups"
+      summary: "update a dynamic group by id or name"
+      parameters:
+        - in: body
+          name: "body"
+          schema:
+            $ref: "#/definitions/DynamicGroupResponse"
+      responses:
+        '200':
+          description: "modified dynamic group object"
+          schema:
+            $ref: "#/definitions/DynamicGroupResponse"
+    delete:
+      tags:
+        - "Groups"
+      summary: "delete a dynamic group by id or name"
+      responses:
+        '200':
+          $ref: "#/responses/Success"
+
+  /v1/policies:
+    get:
+      tags:
+        - "Policies"
+      summary: "get all policies"
+      responses:
+        '200':
+          description: "all policies"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/PolicyResponse"
+    put:
+      tags:
+        - "Policies"
+      summary: "create a policy"
+      parameters:
+        - in: body
+          name: "body"
+          schema:
+            $ref: "#/definitions/PolicyRequest"
+      responses:
+        '200':
+          description: "the newly created policy"
+          schema:
+            $ref: "#/definitions/PolicyResponse"
+
+  /v1/policies/{idOrName}:
+    parameters:
+      - $ref: "#/parameters/IdOrName"
+    get:
+      tags:
+        - "Policies"
+      summary: "get a policy by id or name"
+      responses:
+        '200':
+          description: "policy with id or name"
+          schema:
+            $ref: "#/definitions/PolicyResponse"
+    post:
+      tags:
+        - "Policies"
+      summary: "update a policy by id or name"
+      parameters:
+        - in: body
+          name: "body"
+          schema:
+            $ref: "#/definitions/PolicyRequest"
+      responses:
+        '200':
+          description: "modified policy object"
+          schema:
+            $ref: "#/definitions/PolicyResponse"
+    delete:
+      tags:
+        - "Policies"
+      summary: "delete a policy by id or name"
+      responses:
+        '200':
+          $ref: "#/responses/Success"
+
+  /v1/personal_desktop_policy:
+    post:
+      tags:
+        - "Policies"
+      summary: "update the system personal desktop policy"
+      parameters:
+        - in: body
+          name: "body"
+          schema:
+            $ref: "#/definitions/PolicyRequest"
+      responses:
+        '200':
+          description: "modified policy object"
+          schema:
+            $ref: "#/definitions/PolicyResponse"
+
+  /v1/webhooks:
+    get:
+      tags:
+        - "Integrations"
+      summary: "get all webhook integrations"
+      responses:
+        '200':
+          description: "all webhook integrations"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/WebhookResponse"
+    put:
+      tags:
+        - "Integrations"
+      summary: "create a webhook"
+      parameters:
+        - in: body
+          name: "body"
+          schema:
+            $ref: "#/definitions/WebhookRequest"
+      responses:
+        '200':
+          description: "the newly created webhook"
+          schema:
+            $ref: "#/definitions/WebhookResponse"
+
+  /v1/webhooks/{idOrName}:
+    parameters:
+      - $ref: "#/parameters/IdOrName"
+    get:
+      tags:
+        - "Integrations"
+      summary: "get a webhook integration by id or name"
+      responses:
+        '200':
+          description: "webhook with id or name"
+          schema:
+            $ref: "#/definitions/WebhookResponse"
+    post:
+      tags:
+        - "Integrations"
+      summary: "update a webhook integration by id or name"
+      parameters:
+        - in: body
+          name: "body"
+          schema:
+            $ref: "#/definitions/WebhookRequest"
+      responses:
+        '200':
+          description: "modified webhook integration object"
+          schema:
+            $ref: "#/definitions/WebhookResponse"
+    delete:
+      tags:
+        - "Integrations"
+      summary: "delete a webhook integration by id or name"
+      responses:
+        '200':
+          $ref: "#/responses/Success"
+
+  /v1/activity_log:
+    get:
+      tags:
+        - "Logs"
+      summary: "get all activity logs"
+      responses:
+        '200':
+          description: "all activity logs"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/LogEntryResponse"
+
+  /v1/audit_log:
+    get:
+      tags:
+        - "Logs"
+      summary: "get all audit logs"
+      responses:
+        '200':
+          description: "all audit logs"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/LogEntryResponse"
+
+  /v1/licenses:
+    get:
+      tags:
+        - "Licensing"
+      summary: "get the system license"
+      responses:
+        '200':
+          description: "the system license"
+          schema:
+            $ref: "#/definitions/LicenseResponse"
+
+  /v1/licenses/0:
+    put:
+      tags:
+        - "Licensing"
+      summary: "update the system license"
+      parameters:
+        - in: body
+          name: "body"
+          schema:
+            type: object
+            properties:
+              data:
+                description: "the new license as string"
+                type: string
+      responses:
+        '200':
+          description: "the new system license"
+          schema:
+            $ref: "#/definitions/LicenseResponse"
+
+  /v1/local_idps:
+    get:
+      tags:
+        - "Identity Providers"
+      summary: "get all local identity providers"
+      responses:
+        '200':
+          description: "all local identity providers"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/IdentityProviderResponse"
+    put:
+      tags:
+        - "Identity Providers"
+      summary: "create a local identity provider"
+      parameters:
+        - in: body
+          name: "body"
+          schema:
+            $ref: "#/definitions/IdentityProviderRequest"
+      responses:
+        '200':
+          description: "the newly created local identity provider"
+          schema:
+            $ref: "#/definitions/IdentityProviderResponse"
+
+  /v1/local_idps/{idOrName}:
+    parameters:
+      - $ref: "#/parameters/IdOrName"
+    get:
+      tags:
+        - "Identity Providers"
+      summary: "get a local identity provider by id or name"
+      responses:
+        '200':
+          description: "local identity provider with id or name"
+          schema:
+            $ref: "#/definitions/IdentityProviderResponse"
+    post:
+      tags:
+        - "Identity Providers"
+      summary: "update a local identity provider by id or name"
+      parameters:
+        - in: body
+          name: "body"
+          schema:
+            $ref: "#/definitions/IdentityProviderRequest"
+      responses:
+        '200':
+          description: "modified local identity provider object"
+          schema:
+            $ref: "#/definitions/IdentityProviderResponse"
+    delete:
+      tags:
+        - "Identity Providers"
+      summary: "delete a local provider by id or name"
+      responses:
+        '200':
+          $ref: "#/responses/Success"
+
+  /v1/ldaps:
+    get:
+      tags:
+        - "Identity Providers"
+      summary: "get all ldap identity providers"
+      responses:
+        '200':
+          description: "all ldap identity providers"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/LDAPResponse"
+    put:
+      tags:
+        - "Identity Providers"
+      summary: "create an ldap identity provider"
+      parameters:
+        - in: body
+          name: "body"
+          schema:
+            $ref: "#/definitions/LDAPRequest"
+      responses:
+        '200':
+          description: "the newly created ldap identity provider"
+          schema:
+            $ref: "#/definitions/LDAPResponse"
+
+  /v1/ldaps/{idOrName}:
+    parameters:
+      - $ref: "#/parameters/IdOrName"
+    get:
+      tags:
+        - "Identity Providers"
+      summary: "get an ldap identity provider by id or name"
+      responses:
+        '200':
+          description: "ldap identity provider with id or name"
+          schema:
+            $ref: "#/definitions/LDAPResponse"
+    post:
+      tags:
+        - "Identity Providers"
+      summary: "update an ldap identity provider by id or name"
+      parameters:
+        - in: body
+          name: "body"
+          schema:
+            $ref: "#/definitions/LDAPRequest"
+      responses:
+        '200':
+          description: "modified ldap identity provider object"
+          schema:
+            $ref: "#/definitions/LDAPResponse"
+    delete:
+      tags:
+        - "Identity Providers"
+      summary: "delete an ldap identity provider by id or name"
+      responses:
+        '200':
+          $ref: "#/responses/Success"
+
+  /v1/samls:
+    get:
+      tags:
+        - "Identity Providers"
+      summary: "get all saml identity providers"
+      responses:
+        '200':
+          description: "all saml identity providers"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/SAMLResponse"
+    put:
+      tags:
+        - "Identity Providers"
+      summary: "create a saml identity provider"
+      parameters:
+        - in: body
+          name: "body"
+          schema:
+            $ref: "#/definitions/SAMLRequest"
+      responses:
+        '200':
+          description: "the newly created saml identity provider"
+          schema:
+            $ref: "#/definitions/SAMLResponse"
+
+  /v1/samls/{idOrName}:
+    parameters:
+      - $ref: "#/parameters/IdOrName"
+    get:
+      tags:
+        - "Identity Providers"
+      summary: "get a saml identity provider by id or name"
+      responses:
+        '200':
+          description: "saml identity provider with id or name"
+          schema:
+            $ref: "#/definitions/SAMLResponse"
+    post:
+      tags:
+        - "Identity Providers"
+      summary: "update a saml identity provider by id or name"
+      parameters:
+        - in: body
+          name: "body"
+          schema:
+            $ref: "#/definitions/SAMLRequest"
+      responses:
+        '200':
+          description: "modified saml identity provider object"
+          schema:
+            $ref: "#/definitions/SAMLResponse"
+    delete:
+      tags:
+        - "Identity Providers"
+      summary: "delete a saml identity provider by id or name"
+      responses:
+        '200':
+          $ref: "#/responses/Success"
+
+  /v1/openids:
+    get:
+      tags:
+        - "Identity Providers"
+      summary: "get all openid identity providers"
+      responses:
+        '200':
+          description: "all openid identity providers"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/OpenIDResponse"
+    put:
+      tags:
+        - "Identity Providers"
+      summary: "create an openid identity provider"
+      parameters:
+        - in: body
+          name: "body"
+          schema:
+            $ref: "#/definitions/OpenIDRequest"
+      responses:
+        '200':
+          description: "the newly created openid identity provider"
+          schema:
+            $ref: "#/definitions/OpenIDResponse"
+
+  /v1/openids/{idOrName}:
+    parameters:
+      - $ref: "#/parameters/IdOrName"
+    get:
+      tags:
+        - "Identity Providers"
+      summary: "get an openid identity provider by id or name"
+      responses:
+        '200':
+          description: "openid identity provider with id or name"
+          schema:
+            $ref: "#/definitions/OpenIDResponse"
+    post:
+      tags:
+        - "Identity Providers"
+      summary: "update an openid identity provider by id or name"
+      parameters:
+        - in: body
+          name: "body"
+          schema:
+            $ref: "#/definitions/OpenIDRequest"
+      responses:
+        '200':
+          description: "modified openid identity provider object"
+          schema:
+            $ref: "#/definitions/OpenIDResponse"
+    delete:
+      tags:
+        - "Identity Providers"
+      summary: "delete an openid identity provider by id or name"
+      responses:
+        '200':
+          $ref: "#/responses/Success"
+
+  /v1/radiuses:
+    get:
+      tags:
+        - "Identity Providers"
+      summary: "get all radius identity providers"
+      responses:
+        '200':
+          description: "all radius identity providers"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/RadiusResponse"
+    put:
+      tags:
+        - "Identity Providers"
+      summary: "create a radius identity provider"
+      parameters:
+        - in: body
+          name: "body"
+          schema:
+            $ref: "#/definitions/RadiusRequest"
+      responses:
+        '200':
+          description: "the newly created radius identity provider"
+          schema:
+            $ref: "#/definitions/RadiusResponse"
+
+  /v1/radiuses/{idOrName}:
+    parameters:
+      - $ref: "#/parameters/IdOrName"
+    get:
+      tags:
+        - "Identity Providers"
+      summary: "get a radius identity provider by id or name"
+      responses:
+        '200':
+          description: "radius identity provider with id or name"
+          schema:
+            $ref: "#/definitions/RadiusResponse"
+    post:
+      tags:
+        - "Identity Providers"
+      summary: "update a radius identity provider by id or name"
+      parameters:
+        - in: body
+          name: "body"
+          schema:
+            $ref: "#/definitions/RadiusRequest"
+      responses:
+        '200':
+          description: "modified radius identity provider object"
+          schema:
+            $ref: "#/definitions/RadiusResponse"
+    delete:
+      tags:
+        - "Identity Providers"
+      summary: "delete a radius identity provider by id or name"
+      responses:
+        '200':
+          $ref: "#/responses/Success"
+
+  /v1/auth/{kind}/{id}/stage/1:
+    parameters:
+      - in: path
+        name: kind
+        type: string
+        enum: [ "saml", "openid" ]
+        description: "identity provider kind"
+        required: true
+      - in: path
+        name: id
+        type: integer
+        description: "identity provider id"
+        required: true
+    get:
+      summary: "continue with an external provider authentication"
+      tags:
+        - "Login"
+      responses:
+        '302':
+          description: "redirected for external authentication"
+    post:
+      summary: "authenticate against an identity provider with username and password"
+      tags:
+        - "Login"
+      consumes:
+        - application/x-www-form-urlencoded
+      parameters:
+        - in: formData
+          name: username
+          type: string
+        - in: formData
+          name: password
+          type: string
+      responses:
+        '200':
+          $ref: "#/responses/Success"
+
+  /v1/auth/stage/2:
+    post:
+      summary: "initiate/perform multi-factor authentication"
+      tags:
+        - "Login"
+      parameters:
+        - in: body
+          name: body
+          schema:
+            $ref: "#/definitions/MFAAuthRequest"
+      responses:
+        '204':
+          $ref: "#/responses/Success"
+    get:
+      summary: "complete multi-factor authentication"
+      tags:
+        - "Login"
+      parameters:
+        - in: query
+          name: code
+          type: string
+          format: uuid
+          required: false
+      responses:
+        '200':
+          $ref: "#/responses/Success"
+
+  /v1/users/me:
+    get:
+      summary: "information about the currently logged on user"
+      tags:
+        - "Login"
+      responses:
+        '200':
+          description: "information about the currently logged on user"
+          schema:
+            $ref: "#/definitions/UserResponse"
+
+  /cyolo/v1/logout:
+    get:
+      summary: "logs out the current session"
+      tags:
+        - "Login"
+      responses:
+        '302':
+          description: "redirect to login page"
+
+  /v1/users/me/totp-key-uri:
+    get:
+      summary: "upsert a time-based one-time password seed for the user"
+      tags:
+        - "Enrollment"
+      responses:
+        '200':
+          schema:
+            type: string
+            format: uri
+          description: "a time-based one-time password uri for enrolling with an authenticator app"
+
+  /v1/users/me/verify:
+    post:
+      tags:
+        - "Enrollment"
+      summary: "verify a multi-factor authentication method"
+      parameters:
+        - in: body
+          name: "body"
+          schema:
+            $ref: "#/definitions/MFAVerification"
+      responses:
+        '200':
+          $ref: "#/responses/Success"
+        '401':
+          $ref: "#/responses/Unauthorized"
+
+  /v1/users/me/commit:
+    post:
+      tags:
+        - "Enrollment"
+      summary: "commit user and finish enrollment"
+      responses:
+        '201':
+          $ref: "#/responses/Success"
+
+  /v1/mappings:
+    get:
+      tags:
+        - "Mappings"
+      summary: "get all mappings"
+      responses:
+        '200':
+          description: "all mappings"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/MappingResponse"
+    put:
+      tags:
+        - "Mappings"
+      summary: "create a mapping"
+      parameters:
+        - in: body
+          name: "body"
+          schema:
+            $ref: "#/definitions/MappingRequest"
+      responses:
+        '200':
+          description: "the newly created mapping"
+          schema:
+            $ref: "#/definitions/MappingResponse"
+
+  /v1/mappings/{idOrName}:
+    parameters:
+      - $ref: "#/parameters/IdOrName"
+    get:
+      tags:
+        - "Mappings"
+      summary: "get a mapping by id or name"
+      responses:
+        '200':
+          description: "mapping with id or name"
+          schema:
+            $ref: "#/definitions/MappingResponse"
+    post:
+      tags:
+        - "Mappings"
+      summary: "update a mapping by id or name"
+      parameters:
+        - in: body
+          name: "body"
+          schema:
+            $ref: "#/definitions/MappingRequest"
+      responses:
+        '200':
+          description: "modified mapping object"
+          schema:
+            $ref: "#/definitions/MappingResponse"
+    delete:
+      tags:
+        - "Mappings"
+      summary: "delete a mappings by id or name"
+      responses:
+        '200':
+          $ref: "#/responses/Success"
+
+  /v1/sites:
+    get:
+      tags:
+        - "Sites"
+      summary: "get all sites"
+      responses:
+        '200':
+          description: "all sites"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/SiteResponse"
+    put:
+      tags:
+        - "Sites"
+      summary: "create a site"
+      parameters:
+        - in: body
+          name: "body"
+          schema:
+            $ref: "#/definitions/SiteRequest"
+      responses:
+        '200':
+          description: "the newly created site"
+          schema:
+            $ref: "#/definitions/SiteResponse"
+
+  /v1/sites/{idOrName}:
+    parameters:
+      - $ref: "#/parameters/IdOrName"
+    get:
+      tags:
+        - "Sites"
+      summary: "get a site by id or name"
+      responses:
+        '200':
+          description: "site with id or name"
+          schema:
+            $ref: "#/definitions/SiteResponse"
+    post:
+      tags:
+        - "Sites"
+      summary: "update a site by id or name"
+      parameters:
+        - in: body
+          name: "body"
+          schema:
+            $ref: "#/definitions/SiteRequest"
+      responses:
+        '200':
+          description: "modified mapping object"
+          schema:
+            $ref: "#/definitions/SiteResponse"
+    delete:
+      tags:
+        - "Sites"
+      summary: "delete a sites by id or name"
+      responses:
+        '200':
+          $ref: "#/responses/Success"
+
+  /v1/vault/generic_secret:
+    get:
+      summary: "get all generic secrets"
+      tags:
+        - "Vault"
+      responses:
+        '200':
+          description: "all generic secrets"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/SecretResponse"
+    post:
+      summary: "create a new generic secret"
+      tags:
+        - "Vault"
+      parameters:
+        - in: body
+          name: body
+          schema:
+            $ref: "#/definitions/GenericSecretRequest"
+      responses:
+        '201':
+          $ref: "#/responses/Success"
+
+  /v1/vault/generic_secret/{id}:
+    parameters:
+      - in: path
+        name: id
+        type: string
+        format: uuid
+        required: true
+    put:
+      tags:
+        - "Vault"
+      summary: "update a generic secret with id"
+      parameters:
+        - in: body
+          name: body
+          schema:
+            $ref: "#/definitions/GenericSecretRequest"
+      responses:
+        '201':
+          $ref: "#/responses/Success"
+    delete:
+      summary: "delete a generic secret with id"
+      tags:
+        - "Vault"
+      responses:
+        '200':
+          $ref: "#/responses/Success"
+
+  /v1/vault/username_password:
+    get:
+      summary: "get all passwords"
+      tags:
+        - "Vault"
+      responses:
+        '200':
+          description: "all passwords"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/UsernamePasswordSecretResponse"
+    post:
+      summary: "create a new password"
+      tags:
+        - "Vault"
+      parameters:
+        - in: body
+          name: body
+          schema:
+            $ref: "#/definitions/UsernamePasswordSecretRequest"
+      responses:
+        '201':
+          $ref: "#/responses/Success"
+
+  /v1/vault/username_password/{id}:
+    parameters:
+      - in: path
+        name: id
+        type: string
+        format: uuid
+        required: true
+    put:
+      summary: "update a password with id"
+      tags:
+        - "Vault"
+      parameters:
+        - in: body
+          name: body
+          schema:
+            $ref: "#/definitions/UsernamePasswordSecretRequest"
+      responses:
+        '201':
+          $ref: "#/responses/Success"
+    delete:
+      summary: "delete a password with id"
+      tags:
+        - "Vault"
+      responses:
+        '200':
+          $ref: "#/responses/Success"
+
+  /v1/vault/private_key:
+    get:
+      summary: "get all private keys"
+      tags:
+        - "Vault"
+      responses:
+        '200':
+          description: "all private keys"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/PrivateKeySecretResponse"
+    post:
+      summary: "create a new private key"
+      tags:
+        - "Vault"
+      parameters:
+        - in: body
+          name: body
+          schema:
+            $ref: "#/definitions/PrivateKeySecretRequest"
+      responses:
+        '201':
+          $ref: "#/responses/Success"
+
+  /v1/vault/private_key/{id}:
+    parameters:
+      - in: path
+        name: id
+        type: string
+        format: uuid
+        required: true
+    put:
+      summary: "update a private key with id"
+      tags:
+        - "Vault"
+      parameters:
+        - in: body
+          name: body
+          schema:
+            $ref: "#/definitions/PrivateKeySecretRequest"
+      responses:
+        '201':
+          $ref: "#/responses/Success"
+    delete:
+      summary: "delete a private key with id"
+      tags:
+        - "Vault"
+      responses:
+        '200':
+          $ref: "#/responses/Success"
+
+  /v1/configuration_attributes:
+    get:
+      tags:
+        - "Configuration"
+      summary: "get all possible configuration attributes"
+      responses:
+        '200':
+          description: "all possible configuration attributes"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/ConfigurationDescriptor"
+
+  /v1/configuration:
+    get:
+      tags:
+        - "Configuration"
+      summary: "get all configuration values"
+      responses:
+        '200':
+          description: "all set configuration values"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/ConfigurationValue"
+    post:
+      tags:
+        - "Configuration"
+      summary: "update a configuration value"
+      parameters:
+        - in: body
+          name: body
+          schema:
+            $ref: "#/definitions/ConfigurationValue"
+      responses:
+        '200':
+          description: "the updated configuration value"
+          schema:
+            $ref: "#/definitions/ConfigurationValue"
+
+  /v1/constraints:
+    get:
+      tags:
+        - "Constraints"
+      summary: "get all registered constraints"
+      responses:
+        '200':
+          description: "all registered constraints"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/ConstraintDescriptor"
+
+  /v1/capabilities:
+    get:
+      tags:
+        - "Capabilities"
+      summary: "get all registered protocol capabilities"
+      responses:
+        '200':
+          description: "all registered protocol capabilities"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/CapabilityDescriptor"
+
+  /v1/mapping_attributes:
+    get:
+      tags:
+        - "Mapping Attributes"
+      summary: "get all registered mapping attributes"
+      responses:
+        '200':
+          description: "all registered mapping attributes"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/MappingAttributeDescriptor"
+
+  /v1/api_keys:
+    get:
+      tags:
+        - "API Keys"
+      summary: "get all API keys"
+      responses:
+        '200':
+          description: "all API keys"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/PublicAPIKey"
+    put:
+      tags:
+        - "API Keys"
+      summary: "create an API key"
+      parameters:
+        - in: body
+          name: "body"
+          schema:
+            $ref: "#/definitions/APIKeyRequest"
+      responses:
+        '200':
+          description: "the newly created API key with the secret"
+          schema:
+            $ref: "#/definitions/APIKey"
+
+  /v1/api_keys/{idOrName}:
+    parameters:
+      - $ref: "#/parameters/IdOrName"
+    get:
+      tags:
+        - "API Keys"
+      summary: "retrieve an API key by id or name"
+      responses:
+        '200':
+          description: "public API key information"
+          schema:
+            $ref: "#/definitions/PublicAPIKey"
+    post:
+      tags:
+        - "API Keys"
+      summary: "update an API key by id or name"
+      parameters:
+        - in: body
+          name: "body"
+          description: "API key payload"
+          schema:
+            $ref: "#/definitions/APIKeyRequest"
+      responses:
+        '200':
+          description: "modified api Key object"
+          schema:
+            $ref: "#/definitions/PublicAPIKey"
+    delete:
+      tags:
+        - "API Keys"
+      summary: "delete an API key by id or name"
+      responses:
+        '200':
+          $ref: "#/responses/Success"
+
+definitions:
+  MetaRequest:
+    type: object
+    properties:
+      name:
+        type: string
+        description: "unique name of the object"
+      enabled:
+        type: boolean
+        description: "whether the object is enabled"
+
+  MetaResponse:
+    allOf:
+      - $ref: "#/definitions/MetaRequest"
+      - type: object
+        properties:
+          id:
+            type: string
+            format: integer
+            description: "unique identifier of the object"
+          system:
+            type: boolean
+            description: "whether the object is a system object"
+          kind:
+            type: string
+            description: "type of the object"
+          ctime:
+            type: string
+            format: date-time
+            description: "time the object was created"
+          mtime:
+            type: string
+            format: date-time
+            description: "time the object was last modified"
+
+  SecretRequest:
+    description: "a vault secret"
+    type: object
+    properties:
+      name:
+        description: "a unique name for the secret"
+        type: string
+
+  SecretResponse:
+    allOf:
+      - $ref: "#/definitions/SecretRequest"
+      - type: object
+        properties:
+          id:
+            description: "a unique secret id"
+            type: string
+            format: uuid
+          last_update_time:
+            description: "the time when the secret was last updated"
+            type: string
+            format: date-time
+
+  GenericSecretRequest:
+    allOf:
+      - $ref: "#/definitions/SecretRequest"
+      - type: object
+        properties:
+          secret:
+            description: "an arbitrary secret payload"
+            type: string
+
+  UsernameSecret:
+    type: object
+    properties:
+      username:
+        description: "a username"
+        type: string
+
+  UsernamePasswordSecret:
+    allOf:
+      - $ref: "#/definitions/UsernameSecret"
+      - type: object
+        properties:
+          identity_provider:
+            $ref: "#/definitions/StringIdentity"
+
+  UsernamePasswordSecretResponse:
+    allOf:
+      - $ref: "#/definitions/SecretResponse"
+      - $ref: "#/definitions/UsernamePasswordSecret"
+
+  UsernamePasswordSecretRequest:
+    allOf:
+      - $ref: "#/definitions/SecretRequest"
+      - $ref: "#/definitions/UsernamePasswordSecret"
+      - type: object
+        properties:
+          password:
+            description: "a password"
+            type: string
+
+  PrivateKeySecretResponse:
+    allOf:
+      - $ref: "#/definitions/SecretResponse"
+      - $ref: "#/definitions/UsernameSecret"
+
+
+  PrivateKeySecretRequest:
+    allOf:
+      - $ref: "#/definitions/SecretRequest"
+      - $ref: "#/definitions/UsernameSecret"
+      - type: object
+        properties:
+          private_key:
+            description: "a base64 encoded private key in PEM format"
+            type: string
+            format: byte
+
+  StringIdentity:
+    type: string
+    format: number
+    example: "1"
+
+  StringIdentityArray:
+    type: array
+    items:
+      $ref: "#/definitions/StringIdentity"
+
+  MFAVerification:
+    type: object
+    properties:
+      code:
+        type: string
+        format: number
+        description: "a verification code"
+      kind:
+        type: string
+        enum: [ "totp", "sms" ]
+        description: "the multi-factor authentication method being verified"
+
+  User:
+    description: "a user of the system"
+    type: object
+    properties:
+      personal_desktop:
+        type: string
+        description: "network address of the users personal workstation"
+      totp_enabled:
+        type: boolean
+        description: "can the user authenticate using a time-based one-time password"
+      totp_enrolled:
+        type: boolean
+        description: "does the user have a time-based one-time password seed registered"
+      sms_enrolled:
+        type: boolean
+        description: "is the phone number authenticated and accepted for SMS authentication"
+      email:
+        type: string
+        description: "user's email address"
+      email_enrolled:
+        type: boolean
+        description: "is the email authenticated and accepted for email authentication"
+      phone_number:
+        type: string
+        description: "the user's phone number"
+
+  UserRequest:
+    allOf:
+      - $ref: "#/definitions/User"
+      - $ref: "#/definitions/MetaRequest"
+      - type: object
+        properties:
+          allowed_idps:
+            description: "a list of allowed identity provider ids, currently only one allowed
+            identity provider is supported per user"
+            type: array
+            items:
+              type: integer
+          password_hash:
+            type: string
+            format: bcrypt
+            description: "a users bcrypt password hash, only valid for users that are from a local idp"
+          supervisor:
+            type: integer
+            description: "id of a user supervising authentication for the user"
+
+  UserResponse:
+    allOf:
+      - $ref: "#/definitions/User"
+      - $ref: "#/definitions/MetaResponse"
+      - type: object
+        properties:
+          labels:
+            type: array
+            description: "an array of calculated claims about the user, e.g. supervisor, administrator and auditor"
+            items:
+              type: string
+              enum: [ "supervisor", "auditor", "administrator" ]
+          allowed_idps:
+            type: array
+            description: "a list of identity providers that the user is allowed to login from"
+            items:
+              $ref: "#/definitions/IdP"
+          supervisor:
+            $ref: "#/definitions/UserResponse"
+            description: "a user supervising authentication for the user"
+          auth_level:
+            description: "the authentication level of the user: 0 - anonymous, 1 - pre-authenticated
+            and 2 - authenticated with MFA"
+            type: integer
+            enum: [ 0,1,2 ]
+
+  SimpleGroupResponse:
+    description: "a simple grouping of users"
+    type: object
+    allOf:
+      - $ref: "#/definitions/MetaResponse"
+      - type: object
+        properties:
+          users:
+            description: "member users"
+            type: array
+            items:
+              $ref: "#/definitions/User"
+
+  SimpleGroupRequest:
+    description: "a simple grouping of users"
+    allOf:
+      - $ref: "#/definitions/MetaRequest"
+      - type: object
+        properties:
+          users:
+            description: "member user ids"
+            type: array
+            items:
+              type: string
+
+  DynamicGroup:
+    description: "a collections of users based on a shared attribute or query determined at runtime"
+    type: object
+    allOf:
+      - $ref: "#/definitions/MetaResponse"
+      - type: object
+        properties:
+          idp:
+            description: "the identity provider associated with the dynamic group"
+            $ref: "#/definitions/IdP"
+          query:
+            description: "the query that is made in order to determine membership in the dynamic group"
+            type: string
+          query_type:
+            description: "the type of query that will be made"
+            type: string
+            enum: [ "simple", "attribute" ]
+          expected_value:
+            description: "the value that is expected from the query to deem the user as member in the dynamic group"
+            type: string
+          expected_value_type:
+            description: "the type of the expected value"
+            type: string
+            enum: [ "simple", "regex" ]
+
+  DynamicGroupRequest:
+    allOf:
+      - $ref: "#/definitions/DynamicGroup"
+      - type: object
+        properties:
+          idp:
+            description: "id of the identity provider that this group belongs to"
+            type: string
+            format: integer
+
+  DynamicGroupResponse:
+    allOf:
+      - $ref: "#/definitions/DynamicGroup"
+      - type: object
+        properties:
+          idp:
+            $ref: "#/definitions/IdP"
+
+  Mapping:
+    description: "an application mapping"
+    properties:
+      app_icon:
+        description: "id of the blob that will be used as an application icon"
+        type: string
+      domain:
+        description: "id of the domain under which this application will be served"
+        type: integer
+      external:
+        description: "the external name of the application"
+        type: string
+      initial_program:
+        description: "an initial program that will be run when the application starts
+        this serves different purposes for different protocols, for example for RDP it
+        will be used to configure an alternate shell while for TCP it will be used to start
+        a command on the local computer"
+        type: string
+      insecure_skip_verify:
+        description: "should the authenticity-check of the destination endpoint be skipped"
+        type: boolean
+      internal:
+        description: "the internal address of the application server"
+        type: string
+      port:
+        description: "the port of the internal application server"
+        type: integer
+      protocol:
+        $ref: "#/definitions/Protocol"
+      site:
+        description: "the site to which this application is affine"
+        type: string
+      sso:
+        $ref: "#/definitions/SSO"
+      sso_forms_scrape_url:
+        description: "the url from which to scrape parameters when doing forms-based sso"
+        type: string
+      sso_forms_tpl:
+        description: "the template to use when performing forms-based sso"
+        type: string
+      sso_headers:
+        description: "additional headers to send when performing forms-based sso"
+        type: object
+      sso_home_dir:
+        description: "an optional home directory that the users will be redirected to when
+        they initially connect to the application"
+        type: string
+      sso_credentials_origin:
+        description: "the source of single-sign on credentials"
+        type: string
+        enum: [ "user", "system_vault", "personal_vault" ]
+      sso_vault_id:
+        description: "the secret id in vault"
+        type: string
+        format: uuid
+      user_visible:
+        description: "is the application visible in the applications console"
+        type: boolean
+      properties:
+        description: "mapping attributes associated with the mapping"
+        type: array
+        $ref: "#/definitions/MappingAttribute"
+
+  MappingRequest:
+    allOf:
+      - $ref: "#/definitions/MetaRequest"
+      - $ref: "#/definitions/Mapping"
+
+  MappingResponse:
+    allOf:
+      - $ref: "#/definitions/MetaResponse"
+      - $ref: "#/definitions/Mapping"
+
+  SSO:
+    description: "a single-sign on method id"
+    type: integer
+    enum: [ 0,1,2,3 ]
+
+  Protocol:
+    description: "a unique protocol id"
+    type: integer
+    enum: [ 1,2,3,4,5,6,7,8,11 ]
+
+  Policy:
+    description: "an access policy"
+    type: object
+    properties:
+      capabilities:
+        type: array
+        items:
+          $ref: "#/definitions/CapabilityValue"
+      constraints:
+        type: array
+        items:
+          $ref: "#/definitions/ConstraintValue"
+
+  PolicyRequest:
+    allOf:
+      - $ref: "#/definitions/MetaRequest"
+      - $ref: "#/definitions/Policy"
+      - type: object
+        properties:
+          dynamic_groups:
+            $ref: "#/definitions/StringIdentityArray"
+          simple_groups:
+            $ref: "#/definitions/StringIdentityArray"
+          mappings:
+            $ref: "#/definitions/StringIdentityArray"
+          supervisors:
+            $ref: "#/definitions/StringIdentityArray"
+          users:
+            $ref: "#/definitions/StringIdentityArray"
+          webhooks:
+            $ref: "#/definitions/StringIdentityArray"
+
+  PolicyResponse:
+    allOf:
+      - $ref: "#/definitions/MetaResponse"
+      - $ref: "#/definitions/Policy"
+      - type: object
+        properties:
+          dynamic_groups:
+            type: array
+            items:
+              $ref: "#/definitions/DynamicGroupResponse"
+          simple_groups:
+            type: array
+            items:
+              $ref: "#/definitions/SimpleGroupResponse"
+          mappings:
+            type: array
+            items:
+              $ref: "#/definitions/Mapping"
+          supervisors:
+            type: array
+            items:
+              $ref: "#/definitions/UserResponse"
+          users:
+            type: array
+            items:
+              $ref: "#/definitions/UserResponse"
+          webhooks:
+            type: array
+            items:
+              $ref: "#/definitions/Webhook"
+
+  EAVDescriptor:
+    description: "metadata about an entity-attribute-value object"
+    type: object
+    properties:
+      name:
+        description: "a unique name for the object"
+        type: string
+      type:
+        description: "a string identifying the object's value-type"
+        type: string
+        enum: [ "bool", "string", "int", "float" ]
+      label:
+        description: "a user-friendly label for the object"
+        type: string
+      default_value:
+        description: "a default value for the object"
+        example: true
+
+  EAVValue:
+    type: object
+    properties:
+      value:
+        description: "test"
+        example: 1
+
+  Configuration:
+    type: object
+    properties:
+      attribute_id:
+        description: "the unique identifier of the configuration item"
+        $ref: "#/definitions/StringIdentity"
+
+  ConfigurationDescriptor:
+    description: "a configuration attribute"
+    allOf:
+      - $ref: "#/definitions/EAVDescriptor"
+      - $ref: "#/definitions/Configuration"
+      - type: object
+        properties:
+          section:
+            description: "the section that this configuration item belongs to"
+            type: string
+
+  ConfigurationValue:
+    description: "a configuration value"
+    allOf:
+      - $ref: "#/definitions/EAVValue"
+      - $ref: "#/definitions/Configuration"
+
+  Constraint:
+    type: object
+    properties:
+      constraint_id:
+        description: "unique identifier of the constraint"
+        $ref: "#/definitions/StringIdentity"
+
+  ConstraintDescriptor:
+    description: "an access constraint"
+    allOf:
+      - $ref: "#/definitions/EAVDescriptor"
+      - $ref: "#/definitions/Constraint"
+
+  ConstraintValue:
+    allOf:
+      - $ref: "#/definitions/EAVValue"
+      - $ref: "#/definitions/Constraint"
+
+  Capability:
+    type: object
+    properties:
+      capability_id:
+        description: "the unique identifier of the capability"
+        $ref: "#/definitions/StringIdentity"
+
+  CapabilityDescriptor:
+    description: "a protocol capability"
+    allOf:
+      - $ref: "#/definitions/EAVDescriptor"
+      - $ref: "#/definitions/Capability"
+      - type: object
+        properties:
+          protocols:
+            description: "the protocols in which this capability is supported"
+            type: array
+            items:
+              $ref: "#/definitions/Protocol"
+
+  MappingAttribute:
+    type: object
+    properties:
+      attribute_id:
+        description: "the unique identifier of the mapping attribute"
+        $ref: "#/definitions/StringIdentity"
+
+  MappingAttributeDescriptor:
+    description: "a mapping attribute"
+    allOf:
+      - $ref: "#/definitions/EAVDescriptor"
+      - $ref: "#/definitions/MappingAttribute"
+      - type: object
+        properties:
+          protocols:
+            description: "the protocols in which this attribute is supported"
+            type: array
+            items:
+              $ref: "#/definitions/Protocol"
+
+  CapabilityValue:
+    allOf:
+      - $ref: "#/definitions/EAVValue"
+      - $ref: "#/definitions/Capability"
+
+  IdP:
+    type: object
+    description: "a registered identity provider"
+    properties:
+      id:
+        type: integer
+        description: "the globally unique identifier of the identity provider"
+      idp_kind:
+        type: string
+        description: "identity provider type, e.g local, saml, openid, ldap, etc."
+      name:
+        type: string
+        description: "the unique name of the identity provider"
+
+  Certificate:
+    description: "a general purpose x509 certificate"
+    type: object
+    properties:
+      cert:
+        type: string
+        format: byte
+        description: "base64 encoded PEM block containing a certificate"
+
+  CertificateRequest:
+    allOf:
+      - $ref: "#/definitions/MetaRequest"
+      - $ref: "#/definitions/Certificate"
+
+  CertificateResponse:
+    allOf:
+      - $ref: "#/definitions/MetaResponse"
+      - $ref: "#/definitions/Certificate"
+
+  WebhookCredentials:
+    description: "credentials to be used to authenticate with a webhook"
+    type: object
+    properties:
+      key:
+        description: "the key of the credential item"
+        type: string
+        enum: [ "username", "password" ]
+      value:
+        description: "the value of the credential item"
+        type: string
+      masked:
+        description: "should the credential item be returned from the server"
+        type: boolean
+
+  WebhookPredicate:
+    description: "a predicate used to validate a webhook response"
+    type: object
+    properties:
+      subject:
+        description: "a json path to the validated key"
+        type: string
+      adjective:
+        description: "an expected value in regex format"
+        type: string
+
+  Webhook:
+    description: "a webhook integration"
+    type: object
+    properties:
+      auth_method:
+        description: "the method of authenticating with the webhook target"
+        type: string
+        enum: [ "none", "basic" ]
+      body:
+        description: "the payload to be sent to the webhook target"
+        type: string
+      content_type:
+        description: "the content-type to be sent to the webhook target"
+        type: string
+        default: "application/json"
+      credentials:
+        description: "credentials to be used when authenticating with the webhook target"
+        type: array
+        items:
+          $ref: "#/definitions/WebhookCredentials"
+      method:
+        description: "the http method used to call the webhook"
+        type: string
+        enum: [ "GET", "POST" ]
+      predicates:
+        description: "a list of predicates that have to hold in order for the webhook call
+              to be considered valid"
+        type: array
+        items:
+          $ref: "#/definitions/WebhookCredentials"
+
+  WebhookRequest:
+    allOf:
+      - $ref: "#/definitions/MetaRequest"
+      - $ref: "#/definitions/Webhook"
+
+  WebhookResponse:
+    allOf:
+      - $ref: "#/definitions/MetaResponse"
+      - $ref: "#/definitions/Webhook"
+
+  LogEntry:
+    description: "a log entry"
+    type: object
+    properties:
+      id:
+        description: "the unique identifier of the log entry"
+        type: string
+      kind:
+        description: "the kind of the log entry"
+        type: string
+        enum: [ "activity_log", "audit_log" ]
+      timestamp:
+        description: "the timestamp of when the entry was created"
+        type: string
+        format: date-time
+      remote_address:
+        description: "the remote address associated with the log entry"
+        type: string
+      action:
+        description: "the operation the user was doing that created this entry"
+        type: string
+        enum: [ "read", "create", "update", "delete" ]
+      result:
+        description: "the end result of the user action"
+        type: string
+      subject_id:
+        description: "the id of the entity performing the action"
+        type: string
+      subject_name:
+        description: "the name of the entity performing the action"
+        type: string
+      subject_kind:
+        description: "the kind of the entity performing the action"
+        type: string
+      authority_id:
+        description: "the id of the entity that authorized the action"
+        type: string
+      authority_name:
+        description: "the name of the entity that authorized the action"
+        type: string
+      authority_kind:
+        description: "the kind of the entity that authorized the action"
+        type: string
+      object_id:
+        description: "the id of the entity that the action was performed on"
+        type: string
+      object_name:
+        description: "the name of the entity that the action was performed on"
+        type: string
+      object_kind:
+        description: "the kind of the entity that the action was performed on"
+        type: string
+      session_id:
+        description: "the session from which the log is associated with"
+        type: string
+      message:
+        description: "free text message containing additional information"
+        type: string
+      node_id:
+        description: "the IDAC node id that reported the log"
+        type: string
+      client:
+        description: "identifier of the client which the log is associated with"
+        type: string
+      data:
+        description: "a generic holder for the entry metadata"
+        type: object
+
+  LogEntryResponse:
+    allOf:
+      - $ref: "#/definitions/LogEntry"
+
+  LicenseResponse:
+    description: "a license object"
+    type: object
+    properties:
+      company:
+        description: "company name"
+        type: string
+      users:
+        description: "amount of users"
+        type: integer
+      validation_start:
+        description: "a unix timestamp after which the license is valid"
+        type: integer
+      validation_end:
+        description: "a unix timestamp after which the license is no longer valid"
+        type: integer
+      features:
+        description: "a list of features that the license entitles"
+        type: array
+        items:
+          type: string
+          enum: [ "idac", "edge", "certificate", "sms", "native_ssh", "all" ]
+
+  IdentityProvider:
+    type: object
+    properties:
+      auto_create_shadow_users:
+        description: "a policy for automatic user creation from this idp: 0 - admin rollout,
+              1 - self service creation of disabled user accounts, 2 - full self service"
+        type: integer
+        enum: [ 0, 1, 2 ]
+      mfa_mode:
+        description: "how multi-factor authentication should be handled in the identity provider"
+        type: string
+        enum: [ "no_mfa", "managed", "mandatory" ]
+
+  IdentityProviderRequest:
+    allOf:
+      - $ref: "#/definitions/MetaRequest"
+      - $ref: "#/definitions/IdentityProvider"
+
+  IdentityProviderResponse:
+    allOf:
+      - $ref: "#/definitions/MetaResponse"
+      - $ref: "#/definitions/IdentityProvider"
+      - type: object
+        properties:
+          provider_key:
+            description: "a unique string identifying the identity provider"
+            type: string
+
+  ExternalIdentityProvider:
+    description: "base external identity provider"
+    type: object
+    properties:
+      redirect_uri:
+        description: "the location towards which the identity provider should redirect the user back
+        after authentication"
+        type: string
+
+  LDAP:
+    type: object
+    properties:
+      attributes:
+        description: "a comma delimited list of attributes to retrieve from the ldap server"
+        type: string
+      base_dn:
+        description: "a base search dn"
+        type: string
+      bind_dn:
+        description: "the dn of the user account used for ldap queries"
+        type: string
+      group_filter:
+        description: "an ldap query to obtain user groups"
+        type: string
+      host:
+        description: "the hostname or ip address of the ldap server"
+        type: string
+      insecure:
+        description: "should tls verification be skipped"
+        type: boolean
+      port:
+        description: "the port at which the ldap server should be contacted"
+        type: integer
+      server_name:
+        description: "the name to expect from the server certificate"
+        type: string
+      skip_tls:
+        description: "should STARTTLS be skipped"
+        type: boolean
+      use_ssl:
+        description: "should ldap/s be used"
+        type: boolean
+      user_filter:
+        description: "an ldap query to find the user"
+        type: string
+
+  LDAPResponse:
+    allOf:
+      - $ref: "#/definitions/IdentityProviderResponse"
+      - $ref: "#/definitions/LDAP"
+
+  LDAPRequest:
+    allOf:
+      - $ref: "#/definitions/IdentityProviderRequest"
+      - $ref: "#/definitions/LDAP"
+      - type: object
+        properties:
+          bind_password:
+            description: "a password with which we can bind to the ldap server"
+            type: string
+
+  Radius:
+    type: object
+    properties:
+      host:
+        description: "radius server host"
+        type: string
+      post:
+        description: "radius server port"
+        type: integer
+
+  RadiusResponse:
+    allOf:
+      - $ref: "#/definitions/IdentityProviderResponse"
+      - $ref: "#/definitions/Radius"
+
+  RadiusRequest:
+    allOf:
+      - $ref: "#/definitions/IdentityProviderRequest"
+      - $ref: "#/definitions/Radius"
+      - type: object
+        properties:
+          secret:
+            description: "radius server secret"
+            type: string
+
+  SAML:
+    type: object
+    properties:
+      ca_data:
+        description: "the base64-encoded certificate of the identity provider in PEM format"
+        type: string
+        format: byte
+      email_attr:
+        description: "the attribute used to infer user email"
+        type: string
+      entity_issuer:
+        description: "the name of the service provider entity"
+        type: string
+      redirect_uri:
+        description: "the location towards which the identity provider should redirect the user back
+        after authentication"
+        type: string
+      sso_issuer:
+        description: "the name of the identity provider entity"
+        type: string
+      sso_url:
+        description: "the single-sign on login url"
+        type: string
+      username_attr:
+        description: "the attribute from which the user's unique name should be inferred"
+        type: string
+
+  SAMLRequest:
+    allOf:
+      - $ref: "#/definitions/ExternalIdentityProvider"
+      - $ref: "#/definitions/IdentityProviderRequest"
+      - $ref: "#/definitions/SAML"
+
+  SAMLResponse:
+    allOf:
+      - $ref: "#/definitions/ExternalIdentityProvider"
+      - $ref: "#/definitions/IdentityProviderResponse"
+      - $ref: "#/definitions/SAML"
+
+  OpenID:
+    type: object
+    properties:
+      client_id:
+        description: "openid client id"
+        type: string
+      issuer:
+        description: "openid issuer id"
+        type: string
+      user_id_key:
+        description: "the attribute from which the user's unique id should be inferred"
+        type: string
+      user_name_key:
+        description: "the attribute from which the user's unique name should be inferred"
+        type: string
+
+  OpenIDResponse:
+    allOf:
+      - $ref: "#/definitions/ExternalIdentityProvider"
+      - $ref: "#/definitions/IdentityProviderResponse"
+      - $ref: "#/definitions/OpenID"
+
+  OpenIDRequest:
+    allOf:
+      - $ref: "#/definitions/ExternalIdentityProvider"
+      - $ref: "#/definitions/IdentityProviderRequest"
+      - $ref: "#/definitions/OpenID"
+      - type: object
+        properties:
+          client_secret:
+            description: "openid client secret"
+            type: string
+
+  BrandingInformation:
+    type: object
+    description: "information for customizing the ui"
+    properties:
+      name:
+        type: string
+        description: "name of the company"
+      welcome_message:
+        type: string
+        description: "message to display to the user in the login screen"
+      icon:
+        type: string
+        description: "location from which to obtain the company logo for ui branding"
+
+  ProcessInformation:
+    type: object
+    description: "information about a process that is a member of the cluster"
+    properties:
+      id:
+        type: string
+        description: "idac id"
+      disk_free:
+        type: integer
+        description: "total amount free disk space in bytes"
+      container_info:
+        type: object
+        properties:
+          container_name:
+            type: string
+            description: "unique name of the idac container"
+          image_name:
+            type: string
+            description: "canonical name of the idac container image"
+          image_id:
+            type: string
+            description: "unique identifier of the idac container image"
+      updated_at:
+        type: string
+        format: date-time
+        description: "last timestamp when this object was updated,
+        this indicates the last time that the cluster member communicated with the cluster"
+      mem_total:
+        type: integer
+        description: "total amount of available physical memory in bytes"
+      disk_used:
+        type: integer
+        description: "total amount of used disk space in bytes"
+      mem_free:
+        type: integer
+        description: "total amount of free physical memory in bytes"
+      version:
+        type: string
+        description: "semantic version of idac software"
+      num_cpu:
+        type: integer
+        description: "total amount of cpu cores"
+      executable:
+        type: string
+        description: "name of the idac executable"
+      site:
+        type: string
+        description: "the name of the site where idac is running"
+      mem_used:
+        type: integer
+        description: "total amount of used physical memory in bytes"
+      disk_total:
+        type: integer
+        description: "total amount of disk space (free and used) in bytes"
+      stale:
+        type: boolean
+        description: "software update pending"
+
+  MFAAuthRequest:
+    type: object
+    properties:
+      totp:
+        type: string
+        example: "777777"
+        description: "authentication with time-based one-time password"
+      type:
+        type: string
+        enum: [ "sms", "email" ]
+        description: "initiate multi-factor authentication by sending a code to
+        the user via the given method"
+
+  SiteRequest:
+    type: object
+    properties:
+      name:
+        type: string
+        description: "the unique name of the site"
+      cidr_list:
+        type: array
+        items:
+          type: string
+        description: "the networks this site would in turn manage mappings for"
+      external:
+        type: string
+        description: "how this site will be represented within a hostname"
+
+  SiteResponse:
+    allOf:
+      - $ref: "#/definitions/MetaResponse"
+      - type: object
+        properties:
+          cidr_list:
+            type: array
+            items:
+              type: string
+            description: "the networks this site would in turn manage mappings for"
+          external:
+            type: string
+            description: "how this site will be represented within a hostname"
+
+  PublicAPIKey:
+    type: object
+    properties:
+      name:
+        type: string
+        description: "the name of the api key"
+      user_id:
+        type: string
+        description: "the identity of the user that this api key is assigned to"
+      key:
+        type: string
+        description: "the key id"
+      enabled:
+        type: string
+        description: "whether this api key is enabled or not"
+      ctime:
+        type: string
+        format: date-time
+        description: "time the key was created"
+
+
+  APIKey:
+    allOf:
+      - $ref: "#/definitions/PublicAPIKey"
+      - type: object
+        properties:
+          secret:
+            type: string
+            description: "the key secret"
+
+  APIKeyRequest:
+    type: object
+    properties:
+      name:
+        type: string
+        description: "the name of the API key"
+      enabled:
+        type: boolean
+        description: "whether the object is enabled"
+
